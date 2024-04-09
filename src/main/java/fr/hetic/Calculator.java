@@ -8,7 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class Calcultor {
+public class Calculator {
     public static void main(String[] args) {
         if (args.length != 1) {
             System.out.println("Usage: java OperationFileCalculator <path>");
@@ -32,8 +32,8 @@ public class Calcultor {
 
             String line;
             while ((line = reader.readLine()) != null) {
-                String resultat = calculate(line);
-                writer.write(resultat);
+                String result = calculate(line);
+                writer.write(result);
                 writer.newLine();
             }
         } catch (IOException e) {
@@ -48,15 +48,15 @@ public class Calcultor {
         }
 
         try {
-            double num1 = Double.parseDouble(operationArgs[0]);
-            double num2 = Double.parseDouble(operationArgs[1]);
+            Integer num1 = Integer.parseInt(operationArgs[0]);
+            Integer num2 = Integer.parseInt(operationArgs[1]);
             String operator = operationArgs[2];
 
             return switch (operator) {
                 case "+" -> String.valueOf(num1 + num2);
                 case "-" -> String.valueOf(num1 - num2);
                 case "*" -> String.valueOf(num1 * num2);
-                default -> "ERRORR";
+                default -> "ERROR";
             };
         } catch (NumberFormatException e) {
             return "ERROR";

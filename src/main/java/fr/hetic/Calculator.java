@@ -3,29 +3,29 @@ package fr.hetic;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.stream.Stream;
 
 public class Calculator {
     public static void main(String[] args) {
         if (args.length != 1) {
-            System.out.println("Usage: java OperationFileCalculator <path>");
+            System.out.println("Usage: java fr.java.Calculator <path>");
             return;
         }
 
         Path operationPath = Paths.get(args[0]);
-        try (DirectoryStream<Path> flux = Files.newDirectoryStream(operationPath, "*.op")) {
-            for (Path filePath : flux) {
-                treatFile(filePath);
-            }
+        try (Stream<Path> paths = Files.walk(operationPath)) {
+            paths.filter(Files::isRegularFile)
+                    .filter(path -> path.toString().endsWith(".op"))
+                    .forEach(Calculator::processFile);
         } catch (IOException e) {
-            System.err.println("Error when treating repository: " + e.getMessage());
+            System.err.println("Error when processing directory: " + e.getMessage());
         }
     }
 
-    private static void treatFile(Path entryFilePath) {
+    private static void processFile(Path entryFilePath) {
         Path exitFilePath = Paths.get(entryFilePath.toString().replaceAll("\\.op$", ".res"));
         try (BufferedReader reader = Files.newBufferedReader(entryFilePath);
              BufferedWriter writer = Files.newBufferedWriter(exitFilePath)) {
@@ -37,7 +37,7 @@ public class Calculator {
                 writer.newLine();
             }
         } catch (IOException e) {
-            System.err.println("Error when treating file: " + e.getMessage());
+            System.err.println("Error when processing file: " + e.getMessage());
         }
     }
 

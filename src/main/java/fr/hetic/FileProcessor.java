@@ -3,13 +3,38 @@ package fr.hetic;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.Map;
 import java.util.stream.Stream;
+import java.util.List;
 
 public class FileProcessor {
+    public void processOperations(DataReader dataReader) {
+        try {
+            Map<String, List<String>> operations = dataReader.readData();
+
+            for (Map.Entry<String, List<String>> entry : operations.entrySet()) {
+                String key = entry.getKey();
+                List<String> operationList = entry.getValue();
+                Path outputPath = Path.of("./" + key + ".res");
+
+                try (BufferedWriter writer = Files.newBufferedWriter(outputPath)) {
+                    operationList.stream()
+                            .map(line -> line.split(" "))
+                            .filter(parts -> parts.length == 3)
+                            .forEach(parts -> {
+                                performOperationToFile(parts, writer);
+                            });
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error processing operations: " + e.getMessage());
+        }
+    }
+
     public void processFile(Path filePath) {
         Path outputPath = Paths.get(filePath.toString().replaceAll("\\.op$", ".res"));
         try (Stream<String> lines = Files.lines(filePath);
-             BufferedWriter writer = Files.newBufferedWriter(outputPath)) {
+            BufferedWriter writer = Files.newBufferedWriter(outputPath)) {
 
             lines.map(line -> line.split(" "))
                     .filter(parts -> parts.length == 3)

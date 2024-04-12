@@ -11,9 +11,8 @@ public class DirectoryProcessor {
         this.fileProcessor = fileProcessor;
     }
 
-    public void processDirectory(String directoryPath) {
-        Path dirPath = Paths.get(directoryPath);
-        try (Stream<Path> paths = Files.walk(dirPath)) {
+    public void processDirectory(Path directoryPath) {
+        try (Stream<Path> paths = Files.walk(directoryPath)) {
             paths.filter(Files::isRegularFile)
                     .filter(path -> path.toString().endsWith(".op"))
                     .forEach(fileProcessor::processFile);

@@ -7,10 +7,10 @@ public class Main {
             return;
         }
 
-        String dataSourceType = args[0].toUpperCase();
         ConfigLoader config = new ConfigLoader();
+        String implementation = config.getProperty("implementation").toUpperCase();
 
-        switch (dataSourceType) {
+        switch (implementation) {
             case "JDBC":
                 String dbUrl = config.getProperty("db.url");
                 String username = config.getProperty("db.user");
@@ -41,9 +41,11 @@ public class Main {
     }
 
     private static void showCorrectUsage() {
-        System.out.println("Incorrect usage. Please specify the data source type and relevant parameters:");
-        System.out.println("For file processing: java -cp fr.hetic.Main FILE <directory_path>");
-        System.out.println("For JDBC: java -cp fr.hetic.Main JDBC");
+        System.out.println("Incorrect usage. Please check the implementation type in application.properties:");
+        System.out.println("For JDBC implementation: JDBC");
+        System.out.println("For JDBC implementation: java -cp fr.hetic.Main");
+        System.out.println("For FILE implementation: FILE");
+        System.out.println("For FILE implementation: java -cp fr.hetic.Main <directory_path>");
     }
 
 }

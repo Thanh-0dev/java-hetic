@@ -24,7 +24,6 @@ public class Main {
                     showCorrectUsage();
                     return;
                 }
-                String directoryPath = args[1];
                 FileProcessor fileProcessor = new FileProcessor();
                 DirectoryProcessor directoryProcessor = new DirectoryProcessor(fileProcessor);
                 directoryProcessor.processDirectory(args[0]);
